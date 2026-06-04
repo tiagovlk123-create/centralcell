@@ -47,7 +47,10 @@ const produtosIniciais: Produto[] = [
 ];
 
 export default function Home() {
-  const [logado, setLogado] = useState(false);
+  const [logado, setLogado] = useState(() => {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem("logado") === "true";
+});
   const [tela, setTela] = useState("Dashboard");
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
@@ -74,14 +77,26 @@ export default function Home() {
     }
 
     const lista: Produto[] = snapshot.docs.map((doc) => ({
-  ...(doc.data() as Omit<Produto, "id">),
-  id: doc.id,
-}));
+      ...(doc.data() as Omit<Produto, "id">),
+      id: doc.id,
+    }));
 
     setProdutos(lista);
   }
 
+  async function carregarVendas() {
+    const snapshot = await getDocs(collection(db, "vendas"));
+
+    const lista = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as any),
+    }));
+
+    setVendas(lista);
+  }
+
   carregarProdutos();
+  carregarVendas();
 }, []);
 
   const valorEstoque = produtos.reduce((total, p) => total + p.custo * p.estoque, 0);
@@ -238,9 +253,15 @@ export default function Home() {
           <div className="space-y-4 mt-8">
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Usuário" />
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Senha" type="password" />
-            <button onClick={() => setLogado(true)} className="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg text-white font-bold">
-              ENTRAR
-            </button>
+            <button
+  onClick={() => {
+    localStorage.setItem("logado", "true");
+    setLogado(true);
+  }}
+  className="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg text-white font-bold"
+>
+  ENTRAR
+</button>
           </div>
         </div>
       </div>
