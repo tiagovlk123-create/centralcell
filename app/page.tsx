@@ -50,6 +50,7 @@ export default function Home() {
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
   const [vendas, setVendas] = useState<any[]>([]);
   const [busca, setBusca] = useState("");
+  const [menuAberto, setMenuAberto] = useState(false);
 
   const [novo, setNovo] = useState({
     nome: "",
@@ -151,14 +152,23 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <aside className="w-full md:fixed md:left-0 md:top-0 md:h-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-red-600 p-5">
+      <button
+  onClick={() => setMenuAberto(!menuAberto)}
+  className="md:hidden fixed top-4 left-4 z-50 bg-red-600 text-white px-4 py-2 rounded-lg font-bold"
+>
+  ☰ Menu
+</button>
+      <aside className={`${menuAberto ? "block" : "hidden"} md:block w-full md:fixed md:left-0 md:top-0 md:h-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-red-600 p-5`}>
         <h1 className="text-2xl font-bold text-red-600">CENTRAL</h1>
         <h2 className="text-xl font-bold mb-8">CELL REPAIR</h2>
 
         {["Dashboard", "Produtos", "PDV", "Vendas", "Estoque Baixo"].map((item) => (
           <button
             key={item}
-            onClick={() => setTela(item)}
+            onClick={() => {
+  setTela(item);
+  setMenuAberto(false);
+}}
             className={`block w-full text-left p-3 rounded-lg mb-2 ${
               tela === item ? "bg-red-600" : "hover:bg-zinc-800"
             }`}
@@ -172,7 +182,7 @@ export default function Home() {
         </button>
       </aside>
 
-      <main className="p-4 md:ml-64 md:p-8">
+      <main className="p-4 pt-20 md:pt-8 md:ml-64 md:p-8">
         {tela === "Dashboard" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
