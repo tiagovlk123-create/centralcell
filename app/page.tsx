@@ -73,7 +73,7 @@ export default function Home() {
 
     const lista: Produto[] = snapshot.docs.map((doc) => ({
   ...(doc.data() as Omit<Produto, "id">),
-  id: Date.now(),
+  id: doc.id,
 }));
 
     setProdutos(lista);
