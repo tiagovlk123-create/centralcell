@@ -110,7 +110,7 @@ export default function Home() {
   const docRef = await addDoc(collection(db, "produtos"), produto);
 
   const produtoComId: Produto = {
-    id: Date.now(),
+    id: String(Date.now()),
     ...produto,
   };
 
