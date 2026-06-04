@@ -418,7 +418,18 @@ function TabelaProdutos({ produtos }: { produtos: Produto[] }) {
         <tbody>
           {produtos.map((p) => (
             <tr key={p.id} className="border-t border-zinc-800">
-              <td className="p-3">{p.nome}</td>
+              <td className="p-3">
+  <div className="flex items-center gap-3">
+    {p.foto && (
+      <img
+        src={p.foto}
+        alt={p.nome}
+        className="w-12 h-12 rounded-lg object-cover"
+      />
+    )}
+    <span>{p.nome}</span>
+  </div>
+</td>
               <td className="p-3">{p.categoria}</td>
               <td className="p-3">R$ {p.custo.toFixed(2)}</td>
               <td className="p-3 text-red-500 font-bold">R$ {p.preco.toFixed(2)}</td>
