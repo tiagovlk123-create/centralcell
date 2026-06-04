@@ -158,7 +158,7 @@ export default function Home() {
 >
   ☰ Menu
 </button>
-      <aside className={`${menuAberto ? "block" : "hidden"} md:block w-full md:fixed md:left-0 md:top-0 md:h-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-red-600 p-5`}>
+      <aside className={`${menuAberto ? "block" : "hidden"} md:block w-full md:fixed md:left-0 md:top-0 md:h-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-red-600 p-5 pt-20 md:pt-5`}>
         <h1 className="text-2xl font-bold text-red-600">CENTRAL</h1>
         <h2 className="text-xl font-bold mb-8">CELL REPAIR</h2>
 
