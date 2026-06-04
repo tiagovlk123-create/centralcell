@@ -274,6 +274,7 @@ export default function Home() {
               <Card titulo="Vendas Hoje" valor={`R$ ${vendasHoje.toFixed(2)}`} />
               <Card titulo="Lucro Hoje" valor={`R$ ${lucroHoje.toFixed(2)}`} />
               <Card titulo="Valor em Estoque" valor={`R$ ${valorEstoque.toFixed(2)}`} />
+              <Card titulo="Total de Produtos" valor={`${produtos.length}`} />
               <Card titulo="Estoque Baixo" valor={`${estoqueBaixo}`} />
             </div>
           </>
