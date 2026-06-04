@@ -12,6 +12,7 @@ type Produto = {
   preco: number;
   estoque: number;
   codigo: string;
+  foto?: string;
 };
 
 type ItemCarrinho = Produto & { qtdVenda: number };
@@ -61,6 +62,7 @@ export default function Home() {
     preco: "",
     estoque: "",
     codigo: "",
+    foto: "",
   });
   useEffect(() => {
   async function carregarProdutos() {
@@ -92,6 +94,49 @@ export default function Home() {
       `${p.nome} ${p.categoria} ${p.codigo}`.toLowerCase().includes(busca.toLowerCase())
     );
   }, [produtos, busca]);
+  function selecionarFoto(e: React.ChangeEvent<HTMLInputElement>) {
+  const arquivo = e.target.files?.[0];
+  if (!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = (evento) => {
+    const img = new Image();
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const tamanho = 600;
+
+      canvas.width = tamanho;
+      canvas.height = tamanho;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, tamanho, tamanho);
+
+      const escala = Math.min(tamanho / img.width, tamanho / img.height);
+      const largura = img.width * escala;
+      const altura = img.height * escala;
+      const x = (tamanho - largura) / 2;
+      const y = (tamanho - altura) / 2;
+
+      ctx.drawImage(img, x, y, largura, altura);
+
+      const fotoReduzida = canvas.toDataURL("image/jpeg", 0.7);
+
+      setNovo({
+        ...novo,
+        foto: fotoReduzida,
+      });
+    };
+
+    img.src = evento.target?.result as string;
+  };
+
+  leitor.readAsDataURL(arquivo);
+}
 
   async function cadastrarProduto() {
   if (!novo.nome || !novo.preco || !novo.estoque) {
@@ -105,6 +150,7 @@ export default function Home() {
     preco: Number(novo.preco),
     estoque: Number(novo.estoque),
     codigo: novo.codigo || `COD-${Date.now()}`,
+    foto: novo.foto,
   };
 
   const docRef = await addDoc(collection(db, "produtos"), produto);
@@ -122,6 +168,7 @@ export default function Home() {
     preco: "",
     estoque: "",
     codigo: "",
+    foto: "",
   });
 
   alert("Produto cadastrado no Firebase com sucesso!");
@@ -245,6 +292,26 @@ export default function Home() {
               <input className="Input" placeholder="Custo" value={novo.custo} onChange={(e) => setNovo({ ...novo, custo: e.target.value })} />
               <input className="Input" placeholder="Preço de venda" value={novo.preco} onChange={(e) => setNovo({ ...novo, preco: e.target.value })} />
               <input className="Input" placeholder="Quantidade" value={novo.estoque} onChange={(e) => setNovo({ ...novo, estoque: e.target.value })} />
+              <div className="col-span-full">
+  <label className="block mb-2 font-semibold text-white">
+    Foto do Produto
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={selecionarFoto}
+    className="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-white"
+  />
+
+  {novo.foto && (
+    <img
+      src={novo.foto}
+      alt="Prévia"
+      className="mt-4 h-28 w-28 rounded-lg border border-red-600 object-cover"
+    />
+  )}
+</div>
               <button onClick={cadastrarProduto} className="bg-red-600 rounded-lg font-bold">Cadastrar Produto</button>
             </div>
 
