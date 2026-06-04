@@ -1,0 +1,320 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+type Produto = {
+  id: number;
+  nome: string;
+  categoria: string;
+  custo: number;
+  preco: number;
+  estoque: number;
+  codigo: string;
+};
+
+type ItemCarrinho = Produto & { qtdVenda: number };
+
+const categorias = [
+  "Tela",
+  "Bateria",
+  "Película",
+  "Capinha",
+  "Carregador",
+  "Cabo USB",
+  "Fone de Ouvido",
+  "Conector de Carga",
+  "Câmera",
+  "Alto-falante",
+  "Microfone",
+  "Chip",
+  "Memória",
+  "Acessórios Gamer",
+  "Suporte Veicular",
+  "Power Bank",
+  "Smartwatch",
+  "Caixa de Som",
+  "Outros",
+];
+
+const produtosIniciais: Produto[] = [
+  { id: 1, nome: "Tela iPhone 11", categoria: "Tela", custo: 180, preco: 350, estoque: 5, codigo: "TEL-IP11" },
+  { id: 2, nome: "Bateria Samsung A13", categoria: "Bateria", custo: 45, preco: 120, estoque: 8, codigo: "BAT-A13" },
+  { id: 3, nome: "Película 3D iPhone", categoria: "Película", custo: 5, preco: 25, estoque: 30, codigo: "PEL-3D-IP" },
+  { id: 4, nome: "Cabo Tipo-C Turbo", categoria: "Cabo USB", custo: 12, preco: 35, estoque: 20, codigo: "CAB-TC" },
+];
+
+export default function Home() {
+  const [logado, setLogado] = useState(false);
+  const [tela, setTela] = useState("Dashboard");
+  const [produtos, setProdutos] = useState<Produto[]>(produtosIniciais);
+  const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
+  const [vendas, setVendas] = useState<any[]>([]);
+  const [busca, setBusca] = useState("");
+
+  const [novo, setNovo] = useState({
+    nome: "",
+    categoria: "Tela",
+    custo: "",
+    preco: "",
+    estoque: "",
+    codigo: "",
+  });
+
+  const valorEstoque = produtos.reduce((total, p) => total + p.custo * p.estoque, 0);
+  const vendasHoje = vendas.reduce((total, v) => total + v.total, 0);
+  const lucroHoje = vendas.reduce((total, v) => total + v.lucro, 0);
+  const estoqueBaixo = produtos.filter((p) => p.estoque <= 3).length;
+
+  const produtosFiltrados = useMemo(() => {
+    return produtos.filter((p) =>
+      `${p.nome} ${p.categoria} ${p.codigo}`.toLowerCase().includes(busca.toLowerCase())
+    );
+  }, [produtos, busca]);
+
+  function cadastrarProduto() {
+    if (!novo.nome || !novo.preco || !novo.estoque) return alert("Preencha nome, preço e estoque.");
+
+    const produto: Produto = {
+      id: Date.now(),
+      nome: novo.nome,
+      categoria: novo.categoria,
+      custo: Number(novo.custo || 0),
+      preco: Number(novo.preco),
+      estoque: Number(novo.estoque),
+      codigo: novo.codigo || `COD-${Date.now()}`,
+    };
+
+    setProdutos([produto, ...produtos]);
+    setNovo({ nome: "", categoria: "Tela", custo: "", preco: "", estoque: "", codigo: "" });
+    alert("Produto cadastrado com sucesso!");
+  }
+
+  function adicionarCarrinho(produto: Produto) {
+    if (produto.estoque <= 0) return alert("Produto sem estoque.");
+
+    const existe = carrinho.find((i) => i.id === produto.id);
+
+    if (existe) {
+      if (existe.qtdVenda >= produto.estoque) return alert("Quantidade maior que o estoque.");
+      setCarrinho(carrinho.map((i) => i.id === produto.id ? { ...i, qtdVenda: i.qtdVenda + 1 } : i));
+    } else {
+      setCarrinho([...carrinho, { ...produto, qtdVenda: 1 }]);
+    }
+  }
+
+  function finalizarVenda() {
+    if (carrinho.length === 0) return alert("Carrinho vazio.");
+
+    const total = carrinho.reduce((soma, item) => soma + item.preco * item.qtdVenda, 0);
+    const custo = carrinho.reduce((soma, item) => soma + item.custo * item.qtdVenda, 0);
+    const lucro = total - custo;
+
+    setProdutos(produtos.map((p) => {
+      const item = carrinho.find((i) => i.id === p.id);
+      return item ? { ...p, estoque: p.estoque - item.qtdVenda } : p;
+    }));
+
+    setVendas([
+      {
+        id: Date.now(),
+        data: new Date().toLocaleString("pt-BR"),
+        itens: carrinho,
+        total,
+        lucro,
+      },
+      ...vendas,
+    ]);
+
+    setCarrinho([]);
+    alert("Venda finalizada com sucesso!");
+  }
+
+  if (!logado) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="w-full max-w-md p-8 rounded-2xl bg-zinc-900 border border-red-600">
+          <h1 className="text-4xl font-bold text-red-600 text-center">CENTRAL</h1>
+          <h2 className="text-2xl font-bold text-white text-center">CELL REPAIR</h2>
+          <p className="text-zinc-400 text-center mt-2">Sistema de Estoque e Vendas</p>
+
+          <div className="space-y-4 mt-8">
+            <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Usuário" />
+            <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Senha" type="password" />
+            <button onClick={() => setLogado(true)} className="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg text-white font-bold">
+              ENTRAR
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <aside className="fixed left-0 top-0 h-full w-64 bg-zinc-950 border-r border-red-600 p-5">
+        <h1 className="text-2xl font-bold text-red-600">CENTRAL</h1>
+        <h2 className="text-xl font-bold mb-8">CELL REPAIR</h2>
+
+        {["Dashboard", "Produtos", "PDV", "Vendas", "Estoque Baixo"].map((item) => (
+          <button
+            key={item}
+            onClick={() => setTela(item)}
+            className={`block w-full text-left p-3 rounded-lg mb-2 ${
+              tela === item ? "bg-red-600" : "hover:bg-zinc-800"
+            }`}
+          >
+            {item}
+          </button>
+        ))}
+
+        <button onClick={() => setLogado(false)} className="mt-10 text-zinc-400 hover:text-white">
+          Sair
+        </button>
+      </aside>
+
+      <main className="ml-64 p-8">
+        {tela === "Dashboard" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+            <div className="grid grid-cols-4 gap-5">
+              <Card titulo="Vendas Hoje" valor={`R$ ${vendasHoje.toFixed(2)}`} />
+              <Card titulo="Lucro Hoje" valor={`R$ ${lucroHoje.toFixed(2)}`} />
+              <Card titulo="Valor em Estoque" valor={`R$ ${valorEstoque.toFixed(2)}`} />
+              <Card titulo="Estoque Baixo" valor={`${estoqueBaixo}`} />
+            </div>
+          </>
+        )}
+
+        {tela === "Produtos" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Cadastro de Produtos e Acessórios</h1>
+
+            <div className="grid grid-cols-3 gap-4 bg-zinc-900 p-5 rounded-xl border border-zinc-800 mb-6">
+              <input className="Input" placeholder="Nome do produto" value={novo.nome} onChange={(e) => setNovo({ ...novo, nome: e.target.value })} />
+              <select className="Input" value={novo.categoria} onChange={(e) => setNovo({ ...novo, categoria: e.target.value })}>
+                {categorias.map((c) => <option key={c}>{c}</option>)}
+              </select>
+              <input className="Input" placeholder="Código de barras / SKU" value={novo.codigo} onChange={(e) => setNovo({ ...novo, codigo: e.target.value })} />
+              <input className="Input" placeholder="Custo" value={novo.custo} onChange={(e) => setNovo({ ...novo, custo: e.target.value })} />
+              <input className="Input" placeholder="Preço de venda" value={novo.preco} onChange={(e) => setNovo({ ...novo, preco: e.target.value })} />
+              <input className="Input" placeholder="Quantidade" value={novo.estoque} onChange={(e) => setNovo({ ...novo, estoque: e.target.value })} />
+              <button onClick={cadastrarProduto} className="bg-red-600 rounded-lg font-bold">Cadastrar Produto</button>
+            </div>
+
+            <TabelaProdutos produtos={produtos} />
+          </>
+        )}
+
+        {tela === "PDV" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Nova Venda / PDV</h1>
+
+            <input
+              className="Input mb-5 w-full"
+              placeholder="Buscar produto por nome, categoria ou código"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+            />
+
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-3">
+                {produtosFiltrados.map((p) => (
+                  <div key={p.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between">
+                    <div>
+                      <h3 className="font-bold">{p.nome}</h3>
+                      <p className="text-zinc-400">{p.categoria} • Estoque: {p.estoque}</p>
+                      <p className="text-red-500 font-bold">R$ {p.preco.toFixed(2)}</p>
+                    </div>
+                    <button onClick={() => adicionarCarrinho(p)} className="bg-red-600 px-4 rounded-lg font-bold">
+                      Adicionar
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-zinc-900 border border-red-600 p-5 rounded-xl">
+                <h2 className="text-xl font-bold mb-4">Carrinho</h2>
+
+                {carrinho.map((item) => (
+                  <div key={item.id} className="flex justify-between border-b border-zinc-800 py-2">
+                    <span>{item.nome} x{item.qtdVenda}</span>
+                    <span>R$ {(item.preco * item.qtdVenda).toFixed(2)}</span>
+                  </div>
+                ))}
+
+                <h2 className="text-2xl font-bold mt-6">
+                  Total: R$ {carrinho.reduce((s, i) => s + i.preco * i.qtdVenda, 0).toFixed(2)}
+                </h2>
+
+                <button onClick={finalizarVenda} className="w-full bg-red-600 mt-5 p-3 rounded-lg font-bold">
+                  Finalizar Venda
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {tela === "Vendas" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Histórico de Vendas</h1>
+            {vendas.map((v) => (
+              <div key={v.id} className="bg-zinc-900 border border-zinc-800 p-5 rounded-xl mb-4">
+                <p className="text-zinc-400">{v.data}</p>
+                <h2 className="text-xl font-bold">Total: R$ {v.total.toFixed(2)}</h2>
+                <p className="text-red-500">Lucro: R$ {v.lucro.toFixed(2)}</p>
+              </div>
+            ))}
+          </>
+        )}
+
+        {tela === "Estoque Baixo" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Produtos com Estoque Baixo</h1>
+            <TabelaProdutos produtos={produtos.filter((p) => p.estoque <= 3)} />
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function Card({ titulo, valor }: { titulo: string; valor: string }) {
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+      <p className="text-zinc-400">{titulo}</p>
+      <h2 className="text-2xl font-bold text-red-500">{valor}</h2>
+    </div>
+  );
+}
+
+function TabelaProdutos({ produtos }: { produtos: Produto[] }) {
+  return (
+    <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+      <table className="w-full">
+        <thead className="bg-zinc-950 text-zinc-300">
+          <tr>
+            <th className="p-3 text-left">Produto</th>
+            <th className="p-3 text-left">Categoria</th>
+            <th className="p-3 text-left">Custo</th>
+            <th className="p-3 text-left">Venda</th>
+            <th className="p-3 text-left">Estoque</th>
+            <th className="p-3 text-left">Código</th>
+          </tr>
+        </thead>
+        <tbody>
+          {produtos.map((p) => (
+            <tr key={p.id} className="border-t border-zinc-800">
+              <td className="p-3">{p.nome}</td>
+              <td className="p-3">{p.categoria}</td>
+              <td className="p-3">R$ {p.custo.toFixed(2)}</td>
+              <td className="p-3 text-red-500 font-bold">R$ {p.preco.toFixed(2)}</td>
+              <td className="p-3">{p.estoque}</td>
+              <td className="p-3">{p.codigo}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+

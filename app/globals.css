@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+.Input {
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  outline: none;
+}
+
+.Input:focus {
+  border-color: #dc2626;
+}
