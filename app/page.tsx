@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 type Produto = {
@@ -187,32 +187,45 @@ export default function Home() {
     }
   }
 
-  function finalizarVenda() {
-    if (carrinho.length === 0) return alert("Carrinho vazio.");
+  async function finalizarVenda() {
+  if (carrinho.length === 0) return alert("Carrinho vazio.");
 
-    const total = carrinho.reduce((soma, item) => soma + item.preco * item.qtdVenda, 0);
-    const custo = carrinho.reduce((soma, item) => soma + item.custo * item.qtdVenda, 0);
-    const lucro = total - custo;
+  const total = carrinho.reduce((soma, item) => soma + item.preco * item.qtdVenda, 0);
+  const custo = carrinho.reduce((soma, item) => soma + item.custo * item.qtdVenda, 0);
+  const lucro = total - custo;
 
-    setProdutos(produtos.map((p) => {
-      const item = carrinho.find((i) => i.id === p.id);
-      return item ? { ...p, estoque: p.estoque - item.qtdVenda } : p;
-    }));
+  const venda = {
+    data: new Date().toLocaleString("pt-BR"),
+    itens: carrinho,
+    total,
+    lucro,
+  };
 
-    setVendas([
-      {
-        id: Date.now(),
-        data: new Date().toLocaleString("pt-BR"),
-        itens: carrinho,
-        total,
-        lucro,
-      },
-      ...vendas,
-    ]);
+  await addDoc(collection(db, "vendas"), venda);
 
-    setCarrinho([]);
-    alert("Venda finalizada com sucesso!");
+  for (const item of carrinho) {
+    const produtoRef = doc(db, "produtos", item.id);
+    await updateDoc(produtoRef, {
+      estoque: item.estoque - item.qtdVenda,
+    });
   }
+
+  setProdutos(produtos.map((p) => {
+    const item = carrinho.find((i) => i.id === p.id);
+    return item ? { ...p, estoque: p.estoque - item.qtdVenda } : p;
+  }));
+
+  setVendas([
+    {
+      id: Date.now(),
+      ...venda,
+    },
+    ...vendas,
+  ]);
+
+  setCarrinho([]);
+  alert("Venda finalizada com sucesso!");
+}
 
   if (!logado) {
     return (
