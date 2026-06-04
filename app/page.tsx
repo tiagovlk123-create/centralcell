@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 type Produto = {
-  id: number;
+  id: string;
   nome: string;
   categoria: string;
   custo: number;
@@ -37,16 +39,16 @@ const categorias = [
 ];
 
 const produtosIniciais: Produto[] = [
-  { id: 1, nome: "Tela iPhone 11", categoria: "Tela", custo: 180, preco: 350, estoque: 5, codigo: "TEL-IP11" },
-  { id: 2, nome: "Bateria Samsung A13", categoria: "Bateria", custo: 45, preco: 120, estoque: 8, codigo: "BAT-A13" },
-  { id: 3, nome: "Película 3D iPhone", categoria: "Película", custo: 5, preco: 25, estoque: 30, codigo: "PEL-3D-IP" },
-  { id: 4, nome: "Cabo Tipo-C Turbo", categoria: "Cabo USB", custo: 12, preco: 35, estoque: 20, codigo: "CAB-TC" },
+  { id: "1", nome: "Tela iPhone 11", categoria: "Tela", custo: 180, preco: 350, estoque: 5, codigo: "TEL-IP11" },
+  { id: "2", nome: "Bateria Samsung A13", categoria: "Bateria", custo: 45, preco: 120, estoque: 8, codigo: "BAT-A13" },
+  { id: "3", nome: "Película 3D iPhone", categoria: "Película", custo: 5, preco: 25, estoque: 30, codigo: "PEL-3D-IP" },
+  { id: "4", nome: "Cabo Tipo-C Turbo", categoria: "Cabo USB", custo: 12, preco: 35, estoque: 20, codigo: "CAB-TC" },
 ];
 
 export default function Home() {
   const [logado, setLogado] = useState(false);
   const [tela, setTela] = useState("Dashboard");
-  const [produtos, setProdutos] = useState<Produto[]>(produtosIniciais);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
   const [vendas, setVendas] = useState<any[]>([]);
   const [busca, setBusca] = useState("");
@@ -60,6 +62,25 @@ export default function Home() {
     estoque: "",
     codigo: "",
   });
+  useEffect(() => {
+  async function carregarProdutos() {
+    const snapshot = await getDocs(collection(db, "produtos"));
+
+    if (snapshot.empty) {
+      setProdutos(produtosIniciais);
+      return;
+    }
+
+    const lista = snapshot.docs.map((doc) => ({
+      id: Number(doc.id),
+      ...doc.data(),
+    })) as Produto[];
+
+    setProdutos(lista);
+  }
+
+  carregarProdutos();
+}, []);
 
   const valorEstoque = produtos.reduce((total, p) => total + p.custo * p.estoque, 0);
   const vendasHoje = vendas.reduce((total, v) => total + v.total, 0);
@@ -72,23 +93,39 @@ export default function Home() {
     );
   }, [produtos, busca]);
 
-  function cadastrarProduto() {
-    if (!novo.nome || !novo.preco || !novo.estoque) return alert("Preencha nome, preço e estoque.");
-
-    const produto: Produto = {
-      id: Date.now(),
-      nome: novo.nome,
-      categoria: novo.categoria,
-      custo: Number(novo.custo || 0),
-      preco: Number(novo.preco),
-      estoque: Number(novo.estoque),
-      codigo: novo.codigo || `COD-${Date.now()}`,
-    };
-
-    setProdutos([produto, ...produtos]);
-    setNovo({ nome: "", categoria: "Tela", custo: "", preco: "", estoque: "", codigo: "" });
-    alert("Produto cadastrado com sucesso!");
+  async function cadastrarProduto() {
+  if (!novo.nome || !novo.preco || !novo.estoque) {
+    return alert("Preencha nome, preço e estoque.");
   }
+
+  const produto = {
+    nome: novo.nome,
+    categoria: novo.categoria,
+    custo: Number(novo.custo || 0),
+    preco: Number(novo.preco),
+    estoque: Number(novo.estoque),
+    codigo: novo.codigo || `COD-${Date.now()}`,
+  };
+
+  const docRef = await addDoc(collection(db, "produtos"), produto);
+
+  const produtoComId: Produto = {
+    id: Date.now(),
+    ...produto,
+  };
+
+  setProdutos([produtoComId, ...produtos]);
+  setNovo({
+    nome: "",
+    categoria: "Tela",
+    custo: "",
+    preco: "",
+    estoque: "",
+    codigo: "",
+  });
+
+  alert("Produto cadastrado no Firebase com sucesso!");
+}
 
   function adicionarCarrinho(produto: Produto) {
     if (produto.estoque <= 0) return alert("Produto sem estoque.");
