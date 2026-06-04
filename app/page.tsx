@@ -72,9 +72,9 @@ export default function Home() {
     }
 
     const lista = snapshot.docs.map((doc) => ({
-      id: Number(doc.id),
-      ...doc.data(),
-    })) as Produto[];
+  ...doc.data(),
+  id: Date.now(),
+})) as Produto[];
 
     setProdutos(lista);
   }
