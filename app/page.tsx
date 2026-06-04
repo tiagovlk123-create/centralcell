@@ -126,10 +126,10 @@ export default function Home() {
 
       const fotoReduzida = canvas.toDataURL("image/jpeg", 0.7);
 
-      setNovo({
-        ...novo,
-        foto: fotoReduzida,
-      });
+      setNovo((atual) => ({
+  ...atual,
+  foto: fotoReduzida,
+}));
     };
 
     img.src = evento.target?.result as string;
