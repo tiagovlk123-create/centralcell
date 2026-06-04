@@ -151,7 +151,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <aside className="fixed left-0 top-0 h-full w-64 bg-zinc-950 border-r border-red-600 p-5">
+      <aside className="w-full md:fixed md:left-0 md:top-0 md:h-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-red-600 p-5">
         <h1 className="text-2xl font-bold text-red-600">CENTRAL</h1>
         <h2 className="text-xl font-bold mb-8">CELL REPAIR</h2>
 
@@ -172,11 +172,11 @@ export default function Home() {
         </button>
       </aside>
 
-      <main className="ml-64 p-8">
+      <main className="p-4 md:ml-64 md:p-8">
         {tela === "Dashboard" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
               <Card titulo="Vendas Hoje" valor={`R$ ${vendasHoje.toFixed(2)}`} />
               <Card titulo="Lucro Hoje" valor={`R$ ${lucroHoje.toFixed(2)}`} />
               <Card titulo="Valor em Estoque" valor={`R$ ${valorEstoque.toFixed(2)}`} />
