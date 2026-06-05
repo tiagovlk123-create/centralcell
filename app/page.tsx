@@ -57,6 +57,7 @@ export default function Home() {
   const [vendas, setVendas] = useState<any[]>([]);
   const [busca, setBusca] = useState("");
   const [menuAberto, setMenuAberto] = useState(false);
+  const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
   const [novo, setNovo] = useState({
     nome: "",
