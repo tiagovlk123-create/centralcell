@@ -12,6 +12,7 @@ type Produto = {
   preco: number;
   estoque: number;
   codigo: string;
+  cor?: string;
   foto?: string;
 };
 
@@ -66,6 +67,7 @@ export default function Home() {
     preco: "",
     estoque: "",
     codigo: "",
+    cor: "",
     foto: "",
   });
   useEffect(() => {
@@ -181,6 +183,7 @@ function editarProduto(produto: Produto) {
     preco: Number(novo.preco),
     estoque: Number(novo.estoque),
     codigo: novo.codigo || `COD-${Date.now()}`,
+    cor: novo.cor,
     foto: novo.foto,
   };
 
@@ -356,6 +359,23 @@ function editarProduto(produto: Produto) {
               <input className="Input" placeholder="Custo" value={novo.custo} onChange={(e) => setNovo({ ...novo, custo: e.target.value })} />
               <input className="Input" placeholder="Preço de venda" value={novo.preco} onChange={(e) => setNovo({ ...novo, preco: e.target.value })} />
               <input className="Input" placeholder="Quantidade" value={novo.estoque} onChange={(e) => setNovo({ ...novo, estoque: e.target.value })} />
+              <select
+  className="Input"
+  value={novo.cor}
+  onChange={(e) => setNovo({ ...novo, cor: e.target.value })}
+>
+  <option value="">Cor</option>
+  <option value="Preto">Preto</option>
+  <option value="Branco">Branco</option>
+  <option value="Azul">Azul</option>
+  <option value="Vermelho">Vermelho</option>
+  <option value="Rosa">Rosa</option>
+  <option value="Verde">Verde</option>
+  <option value="Dourado">Dourado</option>
+  <option value="Prata">Prata</option>
+  <option value="Transparente">Transparente</option>
+  <option value="Colorido">Colorido</option>
+</select>
               <div className="col-span-full">
   <label className="block mb-2 font-semibold text-white">
     Foto do Produto
@@ -492,6 +512,7 @@ function TabelaProdutos({
             <th className="p-3 text-left">Custo</th>
             <th className="p-3 text-left">Venda</th>
             <th className="p-3 text-left">Estoque</th>
+            <th className="p-3 text-left">Cor</th>
             <th className="p-3 text-left">Código</th>
             <th className="p-3 text-left">Ações</th>
           </tr>
@@ -522,6 +543,7 @@ function TabelaProdutos({
               <td className={`p-3 font-bold ${p.estoque <= 0 ? "text-red-500" : ""}`}>
   {p.estoque}
 </td>
+<td className="p-3">{p.cor || "-"}</td>
               <td className="p-3">{p.codigo}</td>
               <td className="p-3">
                 <button
