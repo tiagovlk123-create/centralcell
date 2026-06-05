@@ -459,7 +459,7 @@ function editarProduto(produto: Produto) {
                 ))}
               </div>
 
-              <div className="bg-zinc-900 border border-red-600 p-5 rounded-xl">
+              <div className="bg-zinc-900 border border-red-600 p-5 rounded-xl sticky bottom-4 md:top-8 md:bottom-auto">
                 <h2 className="text-xl font-bold mb-4">Carrinho</h2>
 
                 {carrinho.map((item) => (
