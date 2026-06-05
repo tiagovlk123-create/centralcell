@@ -281,6 +281,34 @@ function editarProduto(produto: Produto) {
   setCarrinho([]);
   alert("Venda finalizada com sucesso!");
 }
+async function excluirVenda(venda: any) {
+  if (!confirm("Deseja realmente excluir esta venda?")) return;
+
+  for (const item of venda.itens || []) {
+    const produtoAtual = produtos.find((p) => p.id === item.id);
+
+    if (produtoAtual) {
+      const novoEstoque = produtoAtual.estoque + item.qtdVenda;
+
+      await updateDoc(doc(db, "produtos", item.id), {
+        estoque: novoEstoque,
+      });
+    }
+  }
+
+  await deleteDoc(doc(db, "vendas", String(venda.id)));
+
+  setProdutos(
+    produtos.map((p) => {
+      const item = venda.itens?.find((i: any) => i.id === p.id);
+      return item ? { ...p, estoque: p.estoque + item.qtdVenda } : p;
+    })
+  );
+
+  setVendas(vendas.filter((v) => v.id !== venda.id));
+
+  alert("Venda excluída e estoque devolvido!");
+}
 
   if (!logado) {
     return (
@@ -444,6 +472,9 @@ function editarProduto(produto: Produto) {
     <p className="text-zinc-400">
       {p.categoria} • Cor: {p.cor || "-"}
     </p>
+    <p className="text-zinc-500 text-sm">
+  Cód: {p.codigo}
+</p>
     <p className="text-zinc-400">
       Estoque: {p.estoque}
     </p>
@@ -530,6 +561,12 @@ function editarProduto(produto: Produto) {
       <p className="text-red-500">
         Lucro: R$ {Number(v.lucro || 0).toFixed(2)}
       </p>
+      <button
+  onClick={() => excluirVenda(v)}
+  className="mt-3 bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg text-white font-semibold"
+>
+  Excluir Venda
+</button>
     </div>
   </div>
 ))}
