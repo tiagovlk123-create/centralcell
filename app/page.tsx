@@ -55,6 +55,8 @@ export default function Home() {
   if (typeof window === "undefined") return false;
   return localStorage.getItem("logado") === "true";
 });
+const [usuario, setUsuario] = useState("");
+const [senha, setSenha] = useState("");
   const [tela, setTela] = useState("Dashboard");
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
@@ -324,8 +326,20 @@ async function excluirVenda(venda: any) {
           <p className="text-zinc-400 text-center mt-2">Sistema de Estoque e Vendas</p>
 
           <div className="space-y-4 mt-8">
-            <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Usuário" />
-            <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Senha" type="password" />
+            <input
+  className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700"
+  placeholder="Usuário"
+  value={usuario}
+  onChange={(e) => setUsuario(e.target.value)}
+/>
+
+<input
+  className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700"
+  placeholder="Senha"
+  type="password"
+  value={senha}
+  onChange={(e) => setSenha(e.target.value)}
+/>
             <button
   onClick={async () => {
   const snap = await getDocs(collection(db, "usuarios"));
