@@ -426,7 +426,7 @@ function editarProduto(produto: Produto) {
               onChange={(e) => setBusca(e.target.value)}
             />
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 {produtosFiltrados.map((p) => (
                   <div key={p.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between">
@@ -562,7 +562,7 @@ function TabelaProdutos({
 }) {
   return (
     <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-      <table className="w-full">
+      <table className="min-w-[950px] w-full">
         <thead className="bg-zinc-950 text-zinc-300">
           <tr>
             <th className="p-3 text-left">Produto</th>
