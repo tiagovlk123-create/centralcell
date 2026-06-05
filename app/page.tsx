@@ -103,8 +103,14 @@ export default function Home() {
 }, []);
 
   const valorEstoque = produtos.reduce((total, p) => total + p.custo * p.estoque, 0);
-  const vendasHoje = vendas.reduce((total, v) => total + v.total, 0);
-  const lucroHoje = vendas.reduce((total, v) => total + v.lucro, 0);
+  const hoje = new Date().toLocaleDateString("pt-BR");
+
+const vendasDeHoje = vendas.filter((v) =>
+  String(v.data).startsWith(hoje)
+);
+
+const vendasHoje = vendasDeHoje.reduce((total, v) => total + Number(v.total || 0), 0);
+const lucroHoje = vendasDeHoje.reduce((total, v) => total + Number(v.lucro || 0), 0);
   const estoqueBaixo = produtos.filter((p) => p.estoque <= 0).length;
 
   const produtosFiltrados = useMemo(() => {
