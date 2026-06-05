@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
 
 type Produto = {
   id: string;
@@ -328,10 +327,26 @@ async function excluirVenda(venda: any) {
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Usuário" />
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Senha" type="password" />
             <button
-  onClick={() => {
-    localStorage.setItem("logado", "true");
-    setLogado(true);
-  }}
+  async () => {
+  const snap = await getDocs(collection(db, "usuarios"));
+
+  const usuarioValido = snap.docs.find((d: any) => {
+    const dados = d.data();
+    return (
+      dados.usuario === usuario &&
+      dados.senha === senha &&
+      dados.ativo === true
+    );
+  });
+
+  if (!usuarioValido) {
+    alert("Usuário ou senha inválidos");
+    return;
+  }
+
+  localStorage.setItem("logado", "true");
+  setLogado(true);
+}
   className="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg text-white font-bold"
 >
   ENTRAR
