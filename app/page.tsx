@@ -455,6 +455,7 @@ function editarProduto(produto: Produto) {
             <TabelaProdutos
   produtos={produtos.filter((p) => p.estoque <= 0)}
   setProdutos={setProdutos}
+  editarProduto={editarProduto}
 />
           </>
         )}
