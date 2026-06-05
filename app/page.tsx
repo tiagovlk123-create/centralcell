@@ -485,12 +485,45 @@ function editarProduto(produto: Produto) {
           <>
             <h1 className="text-3xl font-bold mb-6">Histórico de Vendas</h1>
             {vendas.map((v) => (
-              <div key={v.id} className="bg-zinc-900 border border-zinc-800 p-5 rounded-xl mb-4">
-                <p className="text-zinc-400">{v.data}</p>
-                <h2 className="text-xl font-bold">Total: R$ {v.total.toFixed(2)}</h2>
-                <p className="text-red-500">Lucro: R$ {v.lucro.toFixed(2)}</p>
-              </div>
-            ))}
+  <div
+    key={v.id}
+    className="bg-zinc-900 border border-zinc-800 p-5 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-2 gap-4"
+  >
+    <div className="space-y-3">
+      {v.itens?.map((item: any) => (
+        <div key={item.id} className="flex items-center gap-3">
+          {item.foto && (
+            <img
+              src={item.foto}
+              alt={item.nome}
+              className="w-14 h-14 rounded-lg object-cover"
+            />
+          )}
+
+          <div>
+            <p className="font-bold">{item.nome}</p>
+            <p className="text-zinc-400 text-sm">
+              Cor: {item.cor || "-"} • Qtd: {item.qtdVenda}
+            </p>
+            <p className="text-red-500 text-sm font-bold">
+              R$ {(item.preco * item.qtdVenda).toFixed(2)}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="md:text-right">
+      <p className="text-zinc-400">{v.data}</p>
+      <h2 className="text-xl font-bold">
+        Total: R$ {Number(v.total || 0).toFixed(2)}
+      </h2>
+      <p className="text-red-500">
+        Lucro: R$ {Number(v.lucro || 0).toFixed(2)}
+      </p>
+    </div>
+  </div>
+))}
           </>
         )}
 
