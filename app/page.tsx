@@ -398,9 +398,14 @@ async function excluirVenda(venda: any) {
           </button>
         ))}
 
-        <button onClick={() => setLogado(false)} className="mt-10 text-zinc-400 hover:text-white">
-          Sair
-        </button>
+        <button
+  onClick={() => {
+    localStorage.removeItem("logado");
+    setLogado(false);
+  }}
+>
+  Sair
+</button>
       </aside>
 
       <main className="p-4 pt-20 md:pt-8 md:ml-64 md:p-8">
