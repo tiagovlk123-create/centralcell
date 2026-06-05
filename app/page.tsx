@@ -463,11 +463,20 @@ function editarProduto(produto: Produto) {
                 <h2 className="text-xl font-bold mb-4">Carrinho</h2>
 
                 {carrinho.map((item) => (
-                  <div key={item.id} className="flex justify-between border-b border-zinc-800 py-2">
-                    <span>{item.nome} x{item.qtdVenda}</span>
-                    <span>R$ {(item.preco * item.qtdVenda).toFixed(2)}</span>
-                  </div>
-                ))}
+                    <div key={item.id} className="flex justify-between items-center border-b border-zinc-800 py-2">
+  <div>
+    <p>{item.nome} x{item.qtdVenda}</p>
+    <button
+      onClick={() => setCarrinho(carrinho.filter((p) => p.id !== item.id))}
+      className="text-red-500 text-sm"
+    >
+      Remover
+    </button>
+  </div>
+
+  <span>R$ {(item.preco * item.qtdVenda).toFixed(2)}</span>
+</div>
+))}
 
                 <h2 className="text-2xl font-bold mt-6">
                   Total: R$ {carrinho.reduce((s, i) => s + i.preco * i.qtdVenda, 0).toFixed(2)}
@@ -561,8 +570,8 @@ function TabelaProdutos({
   editarProduto: (produto: Produto) => void;
 }) {
   return (
-    <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-      <table className="min-w-[950px] w-full">
+    <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-x-auto">
+      <table className="w-[950px] md:w-full">
         <thead className="bg-zinc-950 text-zinc-300">
           <tr>
             <th className="p-3 text-left">Produto</th>
