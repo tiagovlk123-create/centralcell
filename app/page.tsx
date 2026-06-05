@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, addDoc, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 type Produto = {
@@ -102,7 +102,7 @@ export default function Home() {
   const valorEstoque = produtos.reduce((total, p) => total + p.custo * p.estoque, 0);
   const vendasHoje = vendas.reduce((total, v) => total + v.total, 0);
   const lucroHoje = vendas.reduce((total, v) => total + v.lucro, 0);
-  const estoqueBaixo = produtos.filter((p) => p.estoque <= 3).length;
+  const estoqueBaixo = produtos.filter((p) => p.estoque <= 0).length;
 
   const produtosFiltrados = useMemo(() => {
     return produtos.filter((p) =>
@@ -350,7 +350,7 @@ export default function Home() {
               <button onClick={cadastrarProduto} className="bg-red-600 rounded-lg font-bold">Cadastrar Produto</button>
             </div>
 
-            <TabelaProdutos produtos={produtos} />
+            <TabelaProdutos produtos={produtos} setProdutos={setProdutos} />
           </>
         )}
 
@@ -436,7 +436,13 @@ function Card({ titulo, valor }: { titulo: string; valor: string }) {
   );
 }
 
-function TabelaProdutos({ produtos }: { produtos: Produto[] }) {
+function TabelaProdutos({
+  produtos,
+  setProdutos,
+}: {
+  produtos: Produto[];
+  setProdutos: React.Dispatch<React.SetStateAction<Produto[]>>;
+}) {
   return (
     <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
       <table className="w-full">
@@ -448,6 +454,7 @@ function TabelaProdutos({ produtos }: { produtos: Produto[] }) {
             <th className="p-3 text-left">Venda</th>
             <th className="p-3 text-left">Estoque</th>
             <th className="p-3 text-left">Código</th>
+            <th className="p-3 text-left">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -470,6 +477,19 @@ function TabelaProdutos({ produtos }: { produtos: Produto[] }) {
               <td className="p-3 text-red-500 font-bold">R$ {p.preco.toFixed(2)}</td>
               <td className="p-3">{p.estoque}</td>
               <td className="p-3">{p.codigo}</td>
+              <td className="p-3">
+  <button
+    onClick={async () => {
+  if (confirm("Deseja excluir este produto?")) {
+    await deleteDoc(doc(db, "produtos", p.id));
+    setProdutos(produtos.filter((item) => item.id !== p.id));
+  }
+}}
+    className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
+  >
+    Excluir
+  </button>
+</td>
             </tr>
           ))}
         </tbody>
