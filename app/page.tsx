@@ -419,7 +419,10 @@ export default function Home() {
         {tela === "Estoque Baixo" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Produtos com Estoque Baixo</h1>
-            <TabelaProdutos produtos={produtos.filter((p) => p.estoque <= 3)} />
+            <TabelaProdutos
+  produtos={produtos.filter((p) => p.estoque <= 0)}
+  setProdutos={setProdutos}
+/>
           </>
         )}
       </main>
