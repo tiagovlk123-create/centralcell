@@ -115,7 +115,9 @@ const lucroHoje = vendasDeHoje.reduce((total, v) => total + Number(v.lucro || 0)
 
   const produtosFiltrados = useMemo(() => {
     return produtos.filter((p) =>
-      `${p.nome} ${p.categoria} ${p.codigo}`.toLowerCase().includes(busca.toLowerCase())
+      `${p.nome} ${p.categoria} ${p.codigo} ${p.cor || ""}`
+  .toLowerCase()
+  .includes(busca.toLowerCase())
     );
   }, [produtos, busca]);
   function selecionarFoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -385,6 +387,14 @@ async function excluirVenda(venda: any) {
         {tela === "Produtos" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Cadastro de Produtos e Acessórios</h1>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-5">
+  <input
+    className="Input w-full"
+    placeholder="Pesquisar produto por nome, categoria, cor ou código"
+    value={busca}
+    onChange={(e) => setBusca(e.target.value)}
+  />
+</div>
 
             <div className="grid grid-cols-3 gap-4 bg-zinc-900 p-5 rounded-xl border border-zinc-800 mb-6">
               <input className="Input" placeholder="Nome do produto" value={novo.nome} onChange={(e) => setNovo({ ...novo, nome: e.target.value })} />
@@ -436,7 +446,7 @@ async function excluirVenda(venda: any) {
             </div>
 
             <TabelaProdutos
-  produtos={produtos}
+  produtos={produtosFiltrados}
   setProdutos={setProdutos}
   editarProduto={editarProduto}
 />
