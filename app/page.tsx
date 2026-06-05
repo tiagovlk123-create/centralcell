@@ -327,7 +327,7 @@ async function excluirVenda(venda: any) {
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Usuário" />
             <input className="w-full p-3 rounded-lg bg-zinc-800 text-white border border-zinc-700" placeholder="Senha" type="password" />
             <button
-  async () => {
+  onClick={async () => {
   const snap = await getDocs(collection(db, "usuarios"));
 
   const usuarioValido = snap.docs.find((d: any) => {
