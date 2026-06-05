@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 type Produto = {
@@ -153,6 +153,21 @@ export default function Home() {
 
   leitor.readAsDataURL(arquivo);
 }
+function editarProduto(produto: Produto) {
+  setProdutoEditando(produto.id);
+
+  setNovo({
+    nome: produto.nome,
+    categoria: produto.categoria,
+    custo: String(produto.custo),
+    preco: String(produto.preco),
+    estoque: String(produto.estoque),
+    codigo: produto.codigo,
+    foto: produto.foto || "",
+  });
+
+  setTela("Produtos");
+}
 
   async function cadastrarProduto() {
   if (!novo.nome || !novo.preco || !novo.estoque) {
@@ -169,14 +184,29 @@ export default function Home() {
     foto: novo.foto,
   };
 
-  const docRef = await addDoc(collection(db, "produtos"), produto);
+  if (produtoEditando) {
+    await setDoc(doc(db, "produtos", produtoEditando), produto);
 
-  const produtoComId: Produto = {
-    id: String(Date.now()),
-    ...produto,
-  };
+    setProdutos(
+      produtos.map((p) =>
+        p.id === produtoEditando ? { id: produtoEditando, ...produto } : p
+      )
+    );
 
-  setProdutos([produtoComId, ...produtos]);
+    setProdutoEditando(null);
+    alert("Produto atualizado com sucesso!");
+  } else {
+    const docRef = await addDoc(collection(db, "produtos"), produto);
+
+    const produtoComId: Produto = {
+      id: docRef.id,
+      ...produto,
+    };
+
+    setProdutos([produtoComId, ...produtos]);
+    alert("Produto cadastrado no Firebase com sucesso!");
+  }
+
   setNovo({
     nome: "",
     categoria: "Tela",
@@ -186,8 +216,6 @@ export default function Home() {
     codigo: "",
     foto: "",
   });
-
-  alert("Produto cadastrado no Firebase com sucesso!");
 }
 
   function adicionarCarrinho(produto: Produto) {
@@ -489,6 +517,12 @@ function TabelaProdutos({
 </td>
               <td className="p-3">{p.codigo}</td>
               <td className="p-3">
+                <button
+  onClick={() => editarProduto(p)}
+  className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white mr-2"
+>
+  Editar
+</button>
   <button
     onClick={async () => {
   if (confirm("Deseja excluir este produto?")) {
