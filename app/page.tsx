@@ -430,11 +430,28 @@ function editarProduto(produto: Produto) {
               <div className="space-y-3">
                 {produtosFiltrados.map((p) => (
                   <div key={p.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between">
-                    <div>
-                      <h3 className="font-bold">{p.nome}</h3>
-                      <p className="text-zinc-400">{p.categoria} • Estoque: {p.estoque}</p>
-                      <p className="text-red-500 font-bold">R$ {p.preco.toFixed(2)}</p>
-                    </div>
+                    <div className="flex items-center gap-3">
+  {p.foto && (
+    <img
+      src={p.foto}
+      alt={p.nome}
+      className="w-14 h-14 rounded-lg object-cover"
+    />
+  )}
+
+  <div>
+    <h3 className="font-bold">{p.nome}</h3>
+    <p className="text-zinc-400">
+      {p.categoria} • Cor: {p.cor || "-"}
+    </p>
+    <p className="text-zinc-400">
+      Estoque: {p.estoque}
+    </p>
+    <p className="text-red-500 font-bold">
+      R$ {p.preco.toFixed(2)}
+    </p>
+  </div>
+</div>
                     <button onClick={() => adicionarCarrinho(p)} className="bg-red-600 px-4 rounded-lg font-bold">
                       Adicionar
                     </button>
