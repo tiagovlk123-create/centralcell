@@ -218,6 +218,7 @@ function editarProduto(produto: Produto) {
     preco: "",
     estoque: "",
     codigo: "",
+    cor: "",
     foto: "",
   });
 }
