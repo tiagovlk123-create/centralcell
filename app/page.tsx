@@ -346,7 +346,7 @@ async function excluirVenda(venda: any) {
 
   localStorage.setItem("logado", "true");
   setLogado(true);
-}
+}}
   className="w-full bg-red-600 hover:bg-red-700 p-3 rounded-lg text-white font-bold"
 >
   ENTRAR
