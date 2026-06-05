@@ -379,7 +379,11 @@ function editarProduto(produto: Produto) {
               <button onClick={cadastrarProduto} className="bg-red-600 rounded-lg font-bold">Cadastrar Produto</button>
             </div>
 
-            <TabelaProdutos produtos={produtos} setProdutos={setProdutos} />
+            <TabelaProdutos
+  produtos={produtos}
+  setProdutos={setProdutos}
+  editarProduto={editarProduto}
+/>
           </>
         )}
 
@@ -471,9 +475,11 @@ function Card({ titulo, valor }: { titulo: string; valor: string }) {
 function TabelaProdutos({
   produtos,
   setProdutos,
+  editarProduto,
 }: {
   produtos: Produto[];
   setProdutos: React.Dispatch<React.SetStateAction<Produto[]>>;
+  editarProduto: (produto: Produto) => void;
 }) {
   return (
     <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
