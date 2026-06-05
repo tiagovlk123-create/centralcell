@@ -462,7 +462,12 @@ function TabelaProdutos({
         </thead>
         <tbody>
           {produtos.map((p) => (
-            <tr key={p.id} className="border-t border-zinc-800">
+            <tr
+  key={p.id}
+  className={`border-t border-zinc-800 ${
+    p.estoque <= 0 ? "bg-red-950/50" : ""
+  }`}
+>
               <td className="p-3">
   <div className="flex items-center gap-3">
     {p.foto && (
@@ -478,7 +483,9 @@ function TabelaProdutos({
               <td className="p-3">{p.categoria}</td>
               <td className="p-3">R$ {p.custo.toFixed(2)}</td>
               <td className="p-3 text-red-500 font-bold">R$ {p.preco.toFixed(2)}</td>
-              <td className="p-3">{p.estoque}</td>
+              <td className={`p-3 font-bold ${p.estoque <= 0 ? "text-red-500" : ""}`}>
+  {p.estoque}
+</td>
               <td className="p-3">{p.codigo}</td>
               <td className="p-3">
   <button
