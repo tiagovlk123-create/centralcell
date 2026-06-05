@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 type Produto = {
   id: string;
