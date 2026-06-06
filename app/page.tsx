@@ -719,15 +719,30 @@ async function excluirVenda(venda: any) {
   className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white"
 />
 
-      <button
-  onClick={() => {
-    setDataBuscaInicial(dataInicial);
-    setDataBuscaFinal(dataFinal);
-  }}
-  className="bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
->
-  🔍 Pesquisar
-</button>
+      <div className="flex gap-2">
+  <button
+    onClick={() => {
+      setDataBuscaInicial(dataInicial);
+      setDataBuscaFinal(dataFinal);
+    }}
+    className="flex-1 bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
+  >
+    🔍 Pesquisar
+  </button>
+
+  <button
+    onClick={() => window.print()}
+    className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-4 font-bold"
+  >
+    🖨️
+  </button>
+
+  <button
+    className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-4 font-bold"
+  >
+    📄
+  </button>
+</div>
     </div>
     <div className="grid md:grid-cols-4 gap-4 mt-6">
   <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
