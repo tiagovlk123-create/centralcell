@@ -68,17 +68,18 @@ const [senha, setSenha] = useState("");
   const [busca, setBusca] = useState("");
   const [dataInicial, setDataInicial] = useState("");
   const [dataFinal, setDataFinal] = useState("");
+  const [dataBuscaInicial, setDataBuscaInicial] = useState("");
+  const [dataBuscaFinal, setDataBuscaFinal] = useState("");
   const vendasFiltradas = useMemo(() => {
-  if (!dataInicial || !dataFinal) return [];
+  if (!dataBuscaInicial || !dataBuscaFinal) return [];
 
-  const inicio = new Date(dataInicial + "T00:00:00");
-  const fim = new Date(dataFinal + "T23:59:59");
-
+  const inicio = new Date(dataBuscaInicial + "T00:00:00");
+  const fim = new Date(dataBuscaFinal + "T23:59:59");
   return vendas.filter((v) => {
     const dataVenda = new Date(v.data);
     return dataVenda >= inicio && dataVenda <= fim;
   });
-}, [vendas, dataInicial, dataFinal]);
+}, [vendas, dataBuscaInicial, dataBuscaFinal]);
 const totalRelatorio = vendasFiltradas.reduce(
   (total, v) => total + Number(v.total || 0),
   0
@@ -719,10 +720,14 @@ async function excluirVenda(venda: any) {
 />
 
       <button
-        className="bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
-      >
-        🔍 Pesquisar
-      </button>
+  onClick={() => {
+    setDataBuscaInicial(dataInicial);
+    setDataBuscaFinal(dataFinal);
+  }}
+  className="bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
+>
+  🔍 Pesquisar
+</button>
     </div>
     <div className="grid md:grid-cols-4 gap-4 mt-6">
   <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
