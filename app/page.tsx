@@ -631,6 +631,31 @@ async function excluirVenda(venda: any) {
 ))}
           </>
         )}
+        {tela === "Relatórios" && (
+  <div className="space-y-6">
+    <h1 className="text-3xl font-bold">
+      Relatórios
+    </h1>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <input
+        type="date"
+        className="bg-zinc-900 border border-zinc-700 rounded-lg p-3"
+      />
+
+      <input
+        type="date"
+        className="bg-zinc-900 border border-zinc-700 rounded-lg p-3"
+      />
+
+      <button
+        className="bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
+      >
+        🔍 Pesquisar
+      </button>
+    </div>
+  </div>
+)}
 
         {tela === "Estoque Baixo" && (
           <>
