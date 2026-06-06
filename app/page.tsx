@@ -387,7 +387,14 @@ async function excluirVenda(venda: any) {
         <h1 className="text-2xl font-bold text-red-600">CENTRAL</h1>
         <h2 className="text-xl font-bold mb-8">CELL REPAIR</h2>
 
-        {["Dashboard", "Produtos", "PDV", "Vendas", "Estoque Baixo"].map((item) => (
+        {[
+  "Dashboard",
+  "Produtos",
+  "PDV",
+  "Vendas",
+  "Relatórios",
+  "Estoque Baixo"
+].map((item) => (
           <button
             key={item}
             onClick={() => {
