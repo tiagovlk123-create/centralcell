@@ -66,6 +66,8 @@ const [senha, setSenha] = useState("");
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
   const [vendas, setVendas] = useState<any[]>([]);
   const [busca, setBusca] = useState("");
+  const [dataInicial, setDataInicial] = useState("");
+  const [dataFinal, setDataFinal] = useState("");
   const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
@@ -639,14 +641,17 @@ async function excluirVenda(venda: any) {
 
     <div className="grid md:grid-cols-3 gap-4">
       <input
-        type="date"
-        className="bg-zinc-900 border border-zinc-700 rounded-lg p-3"
-      />
-
-      <input
-        type="date"
-        className="bg-zinc-900 border border-zinc-700 rounded-lg p-3"
-      />
+  type="date"
+  value={dataInicial}
+  onChange={(e) => setDataInicial(e.target.value)}
+  className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white"
+/>
+<input
+  type="date"
+  value={dataFinal}
+  onChange={(e) => setDataFinal(e.target.value)}
+  className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white"
+/>
 
       <button
         className="bg-red-600 hover:bg-red-700 rounded-lg p-3 font-bold"
