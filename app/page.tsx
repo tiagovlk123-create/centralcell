@@ -139,13 +139,20 @@ const produtosVendidosRelatorio = useMemo(() => {
 
   function gerarPDF() {
   const doc = new jsPDF("landscape");
+  const inicio = dataBuscaInicial
+  ? dataBuscaInicial.split("-").reverse().join("/")
+  : "-";
+
+const fim = dataBuscaFinal
+  ? dataBuscaFinal.split("-").reverse().join("/")
+  : "-";
 
   doc.setFontSize(18);
   doc.text("CENTRAL CELL REPAIR", 14, 15);
 
   doc.setFontSize(12);
   doc.text("Relatório de Vendas", 14, 23);
-  doc.text(`Período: ${dataBuscaInicial || "-"} até ${dataBuscaFinal || "-"}`, 14, 31);
+  doc.text(`Período: ${inicio} até ${fim}`, 14, 31);
 
   doc.text(`Total Vendido: R$ ${totalRelatorio.toFixed(2)}`, 14, 42);
   doc.text(`Lucro: R$ ${lucroRelatorio.toFixed(2)}`, 80, 42);
