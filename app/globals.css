@@ -12,3 +12,8 @@
 .Input:focus {
   border-color: #dc2626;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
