@@ -133,6 +133,10 @@ const produtosVendidosRelatorio = useMemo(() => {
       }
     });
   });
+  
+  return Array.from(mapa.values());
+}, [vendasFiltradas]);
+
   function gerarPDF() {
   const doc = new jsPDF("landscape");
 
