@@ -172,6 +172,20 @@ const fim = dataBuscaFinal
       `R$ ${item.lucro.toFixed(2)}`,
     ]),
   });
+  const agora = new Date();
+
+const dataHora =
+  agora.toLocaleDateString("pt-BR") +
+  " " +
+  agora.toLocaleTimeString("pt-BR");
+
+doc.setFontSize(9);
+
+doc.text(
+  `Gerado em: ${dataHora}  |  Sistema Central Cell Repair`,
+  14,
+  doc.internal.pageSize.height - 10
+);
 
   doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
 }
