@@ -691,6 +691,35 @@ async function excluirVenda(venda: any) {
         🔍 Pesquisar
       </button>
     </div>
+    <div className="grid md:grid-cols-4 gap-4 mt-6">
+  <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+    <p className="text-zinc-400 text-sm">Total Vendido</p>
+    <h2 className="text-2xl font-bold text-green-500">
+      R$ {totalRelatorio.toFixed(2)}
+    </h2>
+  </div>
+
+  <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+    <p className="text-zinc-400 text-sm">Lucro</p>
+    <h2 className="text-2xl font-bold text-red-500">
+      R$ {lucroRelatorio.toFixed(2)}
+    </h2>
+  </div>
+
+  <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+    <p className="text-zinc-400 text-sm">Quantidade de Vendas</p>
+    <h2 className="text-2xl font-bold">
+      {quantidadeVendasRelatorio}
+    </h2>
+  </div>
+
+  <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+    <p className="text-zinc-400 text-sm">Produtos Vendidos</p>
+    <h2 className="text-2xl font-bold">
+      {quantidadeProdutosRelatorio}
+    </h2>
+  </div>
+</div>
   </div>
 )}
 
