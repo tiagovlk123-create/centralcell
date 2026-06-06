@@ -79,6 +79,27 @@ const [senha, setSenha] = useState("");
     return dataVenda >= inicio && dataVenda <= fim;
   });
 }, [vendas, dataInicial, dataFinal]);
+const totalRelatorio = vendasFiltradas.reduce(
+  (total, v) => total + Number(v.total || 0),
+  0
+);
+
+const lucroRelatorio = vendasFiltradas.reduce(
+  (total, v) => total + Number(v.lucro || 0),
+  0
+);
+
+const quantidadeVendasRelatorio = vendasFiltradas.length;
+
+const quantidadeProdutosRelatorio = vendasFiltradas.reduce(
+  (total, v) =>
+    total +
+    (v.itens || []).reduce(
+      (soma: number, item: any) => soma + Number(item.qtdVenda || 0),
+      0
+    ),
+  0
+);
   const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
