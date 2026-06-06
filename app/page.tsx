@@ -100,6 +100,39 @@ const quantidadeProdutosRelatorio = vendasFiltradas.reduce(
     ),
   0
 );
+const produtosVendidosRelatorio = useMemo(() => {
+  const mapa = new Map();
+
+  vendasFiltradas.forEach((v) => {
+    (v.itens || []).forEach((item: any) => {
+      const existente = mapa.get(item.id);
+
+      const qtd = Number(item.qtdVenda || 0);
+      const total = Number(item.preco || 0) * qtd;
+      const lucro = (Number(item.preco || 0) - Number(item.custo || 0)) * qtd;
+
+      if (existente) {
+        existente.qtd += qtd;
+        existente.total += total;
+        existente.lucro += lucro;
+      } else {
+        mapa.set(item.id, {
+          id: item.id,
+          nome: item.nome,
+          categoria: item.categoria,
+          cor: item.cor || "-",
+          codigo: item.codigo || "-",
+          foto: item.foto,
+          qtd,
+          total,
+          lucro,
+        });
+      }
+    });
+  });
+
+  return Array.from(mapa.values());
+}, [vendasFiltradas]);
   const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
@@ -719,6 +752,54 @@ async function excluirVenda(venda: any) {
       {quantidadeProdutosRelatorio}
     </h2>
   </div>
+</div>
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+  {produtosVendidosRelatorio.map((item: any) => (
+    <div
+      key={item.id}
+      className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex gap-4"
+    >
+      {item.foto && (
+        <img
+          src={item.foto}
+          alt={item.nome}
+          className="w-24 h-24 rounded-lg object-cover"
+        />
+      )}
+
+      <div className="flex-1">
+        <h3 className="font-bold text-lg">
+          {item.nome}
+        </h3>
+
+        <p className="text-zinc-400 text-sm">
+          Categoria: {item.categoria}
+        </p>
+
+        <p className="text-zinc-400 text-sm">
+          Cor: {item.cor}
+        </p>
+
+        <p className="text-zinc-400 text-sm">
+          Código: {item.codigo}
+        </p>
+
+        <div className="mt-3 space-y-1">
+          <p className="text-white">
+            Quantidade: <b>{item.qtd}</b>
+          </p>
+
+          <p className="text-green-500 font-bold">
+            Total: R$ {item.total.toFixed(2)}
+          </p>
+
+          <p className="text-red-500 font-bold">
+            Lucro: R$ {item.lucro.toFixed(2)}
+          </p>
+        </div>
+      </div>
+    </div>
+  ))}
 </div>
   </div>
 )}
