@@ -133,7 +133,7 @@ const produtosVendidosRelatorio = useMemo(() => {
       }
     });
   });
-  
+
   return Array.from(mapa.values());
 }, [vendasFiltradas]);
 
