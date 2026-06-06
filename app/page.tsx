@@ -68,6 +68,17 @@ const [senha, setSenha] = useState("");
   const [busca, setBusca] = useState("");
   const [dataInicial, setDataInicial] = useState("");
   const [dataFinal, setDataFinal] = useState("");
+  const vendasFiltradas = useMemo(() => {
+  if (!dataInicial || !dataFinal) return [];
+
+  const inicio = new Date(dataInicial + "T00:00:00");
+  const fim = new Date(dataFinal + "T23:59:59");
+
+  return vendas.filter((v) => {
+    const dataVenda = new Date(v.data);
+    return dataVenda >= inicio && dataVenda <= fim;
+  });
+}, [vendas, dataInicial, dataFinal]);
   const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
