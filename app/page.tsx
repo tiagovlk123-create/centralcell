@@ -169,9 +169,10 @@ const produtosVendidosRelatorio = useMemo(() => {
   doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
 }
 
-  return Array.from(mapa.values());
-}, [vendasFiltradas]);
-  const [menuAberto, setMenuAberto] = useState(false);
+  doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
+}
+
+const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
 
   const [novo, setNovo] = useState({
