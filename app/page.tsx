@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -131,6 +133,37 @@ const produtosVendidosRelatorio = useMemo(() => {
       }
     });
   });
+  function gerarPDF() {
+  const doc = new jsPDF("landscape");
+
+  doc.setFontSize(18);
+  doc.text("CENTRAL CELL REPAIR", 14, 15);
+
+  doc.setFontSize(12);
+  doc.text("Relatório de Vendas", 14, 23);
+  doc.text(`Período: ${dataBuscaInicial || "-"} até ${dataBuscaFinal || "-"}`, 14, 31);
+
+  doc.text(`Total Vendido: R$ ${totalRelatorio.toFixed(2)}`, 14, 42);
+  doc.text(`Lucro: R$ ${lucroRelatorio.toFixed(2)}`, 80, 42);
+  doc.text(`Vendas: ${quantidadeVendasRelatorio}`, 130, 42);
+  doc.text(`Produtos Vendidos: ${quantidadeProdutosRelatorio}`, 170, 42);
+
+  autoTable(doc, {
+    startY: 52,
+    head: [["Produto", "Categoria", "Cor", "Código", "Qtd", "Total", "Lucro"]],
+    body: produtosVendidosRelatorio.map((item: any) => [
+      item.nome,
+      item.categoria,
+      item.cor,
+      item.codigo,
+      item.qtd,
+      `R$ ${item.total.toFixed(2)}`,
+      `R$ ${item.lucro.toFixed(2)}`,
+    ]),
+  });
+
+  doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
+}
 
   return Array.from(mapa.values());
 }, [vendasFiltradas]);
@@ -738,10 +771,11 @@ async function excluirVenda(venda: any) {
   </button>
 
   <button
-    className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-4 font-bold"
-  >
-    📄
-  </button>
+  onClick={gerarPDF}
+  className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg p-3 font-bold"
+>
+  📄 PDF
+</button>
 </div>
     </div>
     <div className="grid md:grid-cols-4 gap-4 mt-6">
