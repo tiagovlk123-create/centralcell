@@ -260,7 +260,7 @@ Obrigado pela preferência!
         <title>Cupom</title>
         <style>
   @page {
-    size: 58mm auto;
+    size: 58mm 80mm;
     margin: 0;
   }
 
@@ -268,22 +268,26 @@ Obrigado pela preferência!
     margin: 0;
     padding: 0;
     width: 58mm;
+    height: auto;
     background: white;
+    overflow: hidden;
   }
 
   body {
     font-family: monospace;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 1.25;
+    line-height: 1.1;
     color: #000;
   }
 
   pre {
     margin: 0;
-    padding: 2mm;
-    width: 54mm;
+    padding: 1mm;
+    width: 48mm;
+    max-width: 48mm;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
   }
 </style>
       </head>
