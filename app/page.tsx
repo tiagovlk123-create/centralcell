@@ -732,7 +732,19 @@ async function excluirVenda(venda: any) {
         {tela === "Vendas" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Histórico de Vendas</h1>
-            {vendas.map((v) => (
+            {[...vendas]
+  .sort((a: any, b: any) => {
+    const dataA = a.createdAt?.seconds
+      ? a.createdAt.seconds * 1000
+      : new Date(a.data).getTime();
+
+    const dataB = b.createdAt?.seconds
+      ? b.createdAt.seconds * 1000
+      : new Date(b.data).getTime();
+
+    return dataB - dataA;
+  })
+  .map((v) => (
   <div
     key={v.id}
     className="bg-zinc-900 border border-zinc-800 p-5 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-2 gap-4"
