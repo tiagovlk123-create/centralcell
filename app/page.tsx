@@ -259,21 +259,35 @@ Obrigado pela preferência!
       <head>
         <title>Cupom</title>
         <style>
-          @page {
-            size: 58mm auto;
-            margin: 2mm;
-          }
+  @page {
+    size: 58mm auto;
+    margin: 0;
+  }
 
-          body {
-            width: 58mm;
-            font-family: monospace;
-            font-size: 11px;
-            white-space: pre-wrap;
-            color: #000;
-          }
-        </style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 58mm;
+    background: white;
+  }
+
+  body {
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.25;
+    color: #000;
+  }
+
+  pre {
+    margin: 0;
+    padding: 2mm;
+    width: 54mm;
+    white-space: pre-wrap;
+  }
+</style>
       </head>
-      <body>${conteudo}</body>
+      <body><pre>${conteudo}</pre></body>
     </html>
   `);
 
