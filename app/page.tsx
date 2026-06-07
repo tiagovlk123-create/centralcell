@@ -78,7 +78,21 @@ const [senha, setSenha] = useState("");
   const inicio = new Date(dataBuscaInicial + "T00:00:00");
   const fim = new Date(dataBuscaFinal + "T23:59:59");
   return vendas.filter((v) => {
-    const dataVenda = new Date(v.dataISO || v.data);
+    let dataVenda = new Date(v.dataISO || v.data);
+
+if (isNaN(dataVenda.getTime()) && v.data) {
+  const dataParte = String(v.data).split(",")[0];
+  const [dia, mes, ano] = dataParte.split("/");
+
+  dataVenda = new Date(
+    Number(ano),
+    Number(mes) - 1,
+    Number(dia),
+    12,
+    0,
+    0
+  );
+}
     return dataVenda >= inicio && dataVenda <= fim;
   });
 }, [vendas, dataBuscaInicial, dataBuscaFinal]);
