@@ -211,7 +211,7 @@ doc.text(
 
   doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
 }
-function imprimirCupom() {
+async function imprimirCupom() {
   const inicio = dataBuscaInicial
     ? dataBuscaInicial.split("-").reverse().join("/")
     : "-";
@@ -237,68 +237,37 @@ R$ ${item.total.toFixed(2)}
 
   const conteudo = `
       CENTRAL CELL REPAIR
-------------------------------
+---------------------------------
 Período:
 ${inicio} até ${fim}
 
 ${itensTexto}
-------------------------------
+---------------------------------
 Itens: ${totalItens}
 TOTAL: R$ ${totalRelatorio.toFixed(2)}
-------------------------------
+---------------------------------
 
 Obrigado pela preferência!
 `;
 
-  const janela = window.open("", "_blank", "width=300,height=600");
+  try {
+    const resposta = await fetch("http://localhost:9876/imprimir", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ texto: conteudo }),
+    });
 
-  if (!janela) return;
+    if (!resposta.ok) {
+      alert("Erro ao enviar cupom para o CentralCell Printer.");
+      return;
+    }
 
-  janela.document.write(`
-    <html>
-      <head>
-        <title>Cupom</title>
-        <style>
-  @page {
-    size: 58mm 80mm;
-    margin: 0;
+    alert("Cupom enviado para o CentralCell Printer.");
+  } catch (erro) {
+    alert("CentralCell Printer não está aberto. Inicie o driver primeiro.");
   }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 58mm;
-    height: auto;
-    background: white;
-    overflow: hidden;
-  }
-
-  body {
-    font-family: monospace;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1.1;
-    color: #000;
-  }
-
-  pre {
-    margin: 0;
-    padding: 1mm;
-    width: 48mm;
-    max-width: 48mm;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-  }
-</style>
-      </head>
-      <body><pre>${conteudo}</pre></body>
-    </html>
-  `);
-
-  janela.document.close();
-  janela.focus();
-  janela.print();
-  janela.close();
 }
 
 const [menuAberto, setMenuAberto] = useState(false);
