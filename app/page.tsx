@@ -77,22 +77,30 @@ const [senha, setSenha] = useState("");
 
   const inicio = new Date(dataBuscaInicial + "T00:00:00");
   const fim = new Date(dataBuscaFinal + "T23:59:59");
+
   return vendas.filter((v) => {
-    let dataVenda = new Date(v.dataISO || v.data);
+    let dataVenda: Date;
 
-if (isNaN(dataVenda.getTime()) && v.data) {
-  const dataParte = String(v.data).split(",")[0];
-  const [dia, mes, ano] = dataParte.split("/");
+    if (v.dataISO) {
+      dataVenda = new Date(v.dataISO);
+    } else {
+      const dataTexto = String(v.data || "");
+      const dataParte = dataTexto.split(",")[0];
+      const horaParte = dataTexto.split(",")[1]?.trim() || "00:00:00";
 
-  dataVenda = new Date(
-    Number(ano),
-    Number(mes) - 1,
-    Number(dia),
-    12,
-    0,
-    0
-  );
-}
+      const [dia, mes, ano] = dataParte.split("/");
+      const [hora, minuto, segundo] = horaParte.split(":");
+
+      dataVenda = new Date(
+        Number(ano),
+        Number(mes) - 1,
+        Number(dia),
+        Number(hora || 0),
+        Number(minuto || 0),
+        Number(segundo || 0)
+      );
+    }
+
     return dataVenda >= inicio && dataVenda <= fim;
   });
 }, [vendas, dataBuscaInicial, dataBuscaFinal]);
