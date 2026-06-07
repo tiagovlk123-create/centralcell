@@ -211,6 +211,77 @@ doc.text(
 
   doc.save(`relatorio-${dataBuscaInicial || "inicio"}-${dataBuscaFinal || "fim"}.pdf`);
 }
+function imprimirCupom() {
+  const inicio = dataBuscaInicial
+    ? dataBuscaInicial.split("-").reverse().join("/")
+    : "-";
+
+  const fim = dataBuscaFinal
+    ? dataBuscaFinal.split("-").reverse().join("/")
+    : "-";
+
+  const itensTexto = produtosVendidosRelatorio
+    .map(
+      (item: any) => `
+${item.nome}
+Qtd: ${item.qtd}
+R$ ${item.total.toFixed(2)}
+`
+    )
+    .join("");
+
+  const totalItens = produtosVendidosRelatorio.reduce(
+    (soma: number, item: any) => soma + Number(item.qtd || 0),
+    0
+  );
+
+  const conteudo = `
+      CENTRAL CELL REPAIR
+------------------------------
+Período:
+${inicio} até ${fim}
+
+${itensTexto}
+------------------------------
+Itens: ${totalItens}
+TOTAL: R$ ${totalRelatorio.toFixed(2)}
+------------------------------
+
+Obrigado pela preferência!
+`;
+
+  const janela = window.open("", "_blank", "width=300,height=600");
+
+  if (!janela) return;
+
+  janela.document.write(`
+    <html>
+      <head>
+        <title>Cupom</title>
+        <style>
+          @page {
+            size: 58mm auto;
+            margin: 2mm;
+          }
+
+          body {
+            width: 58mm;
+            font-family: monospace;
+            font-size: 11px;
+            white-space: pre-wrap;
+            color: #000;
+          }
+        </style>
+      </head>
+      <body>${conteudo}</body>
+    </html>
+  `);
+
+  janela.document.close();
+  janela.focus();
+  janela.print();
+  janela.close();
+}
 
 const [menuAberto, setMenuAberto] = useState(false);
   const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
@@ -824,7 +895,7 @@ async function excluirVenda(venda: any) {
   </button>
 
   <button
-    onClick={() => window.print()}
+    onClick={imprimirCupom}
     className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-4 font-bold"
   >
     🖨️
