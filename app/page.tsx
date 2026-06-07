@@ -78,7 +78,7 @@ const [senha, setSenha] = useState("");
   const inicio = new Date(dataBuscaInicial + "T00:00:00");
   const fim = new Date(dataBuscaFinal + "T23:59:59");
   return vendas.filter((v) => {
-    const dataVenda = new Date(v.data);
+    const dataVenda = new Date(v.dataISO || v.data);
     return dataVenda >= inicio && dataVenda <= fim;
   });
 }, [vendas, dataBuscaInicial, dataBuscaFinal]);
@@ -384,12 +384,15 @@ function editarProduto(produto: Produto) {
   const custo = carrinho.reduce((soma, item) => soma + item.custo * item.qtdVenda, 0);
   const lucro = total - custo;
 
-  const venda = {
-    data: new Date().toLocaleString("pt-BR"),
-    itens: carrinho,
-    total,
-    lucro,
-  };
+  const agora = new Date();
+
+const venda = {
+  data: agora.toLocaleString("pt-BR"),
+  dataISO: agora.toISOString(),
+  itens: carrinho,
+  total,
+  lucro,
+};
 
   await addDoc(collection(db, "vendas"), venda);
 
