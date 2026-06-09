@@ -457,6 +457,22 @@ function editarProduto(produto: Produto) {
     }
   }
 
+  async function imprimirProduto(item: any) {
+  const texto = `
+${item.nome}
+Qtd: ${item.qtd}
+R$ ${item.total.toFixed(2)}
+
+Obrigado pela preferencia!
+`;
+
+  await fetch("http://localhost:9876/imprimir", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ texto }),
+  });
+}
+
   async function finalizarVenda() {
   if (carrinho.length === 0) return alert("Carrinho vazio.");
 
@@ -968,6 +984,12 @@ async function excluirVenda(venda: any) {
           <p className="text-red-500 font-bold">
             Lucro: R$ {item.lucro.toFixed(2)}
           </p>
+          <button
+  className="mt-3 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-white"
+  onClick={() => imprimirProduto(item)}
+>
+  🖨️ Imprimir
+</button>
         </div>
       </div>
     </div>
