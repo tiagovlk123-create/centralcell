@@ -515,6 +515,24 @@ const venda = {
   setCarrinho([]);
   alert("Venda finalizada com sucesso!");
 }
+async function imprimirVenda(venda: any) {
+  const texto = venda.itens
+    .map(
+      (item: any) =>
+        `${item.codigo || item.nome}\nQtd: ${item.qtdVenda}\nR$ ${(item.preco * item.qtdVenda).toFixed(2)}`
+    )
+    .join("\n\n");
+
+  await fetch("http://localhost:9876/imprimir", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      texto,
+    }),
+  });
+}
 async function excluirVenda(venda: any) {
   if (!confirm("Deseja realmente excluir esta venda?")) return;
 
@@ -855,6 +873,12 @@ async function excluirVenda(venda: any) {
       <p className="text-red-500">
         Lucro: R$ {Number(v.lucro || 0).toFixed(2)}
       </p>
+      <button
+  onClick={() => imprimirVenda(v)}
+  className="mt-3 mr-2 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg text-white font-semibold"
+>
+  🖨️ Imprimir
+</button>
       <button
   onClick={() => excluirVenda(v)}
   className="mt-3 bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg text-white font-semibold"
