@@ -516,7 +516,11 @@ const venda = {
   alert("Venda finalizada com sucesso!");
 }
 async function imprimirVenda(venda: any) {
-  const texto = venda.itens
+  const dataVenda = venda.data || "";
+
+const texto =
+  `${dataVenda}\n\n` +
+  venda.itens
     .map(
       (item: any) =>
         `${item.nome}\nQtd: ${item.qtdVenda}\nR$ ${(item.preco * item.qtdVenda).toFixed(2)}`
