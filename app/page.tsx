@@ -517,6 +517,10 @@ const venda = {
 }
 async function imprimirVenda(venda: any) {
   const dataVenda = venda.data || "";
+  const totalItens = venda.itens.reduce(
+  (soma: number, item: any) => soma + Number(item.qtdVenda || 0),
+  0
+);
 
 const texto =
   `${dataVenda}\n\n` +
@@ -525,7 +529,16 @@ const texto =
       (item: any) =>
         `${item.nome}\nQtd: ${item.qtdVenda}\nR$ ${(item.preco * item.qtdVenda).toFixed(2)}`
     )
-    .join("\n\n");
+    .join("\n\n") +
+`
+
+-------------------------------
+Itens: ${totalItens}
+TOTAL: R$ ${Number(venda.total || 0).toFixed(2)}
+-------------------------------
+
+Obrigado pela preferencia!
+`;
 
   await fetch("http://localhost:9876/imprimir", {
     method: "POST",
