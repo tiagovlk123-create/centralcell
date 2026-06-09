@@ -516,7 +516,7 @@ const venda = {
   alert("Venda finalizada com sucesso!");
 }
 async function imprimirVenda(venda: any) {
-  const dataVenda = venda.data || "";
+  const dataVenda = (venda.data || "").replace(",", "");
   const totalItens = venda.itens.reduce(
   (soma: number, item: any) => soma + Number(item.qtdVenda || 0),
   0
