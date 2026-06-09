@@ -463,7 +463,7 @@ ${item.nome}
 Qtd: ${item.qtd}
 R$ ${item.total.toFixed(2)}
 
-Obrigado pela preferencia!
+ Obrigado pela preferencia!
 `;
 
   await fetch("http://localhost:9876/imprimir", {
