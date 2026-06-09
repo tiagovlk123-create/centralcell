@@ -519,7 +519,7 @@ async function imprimirVenda(venda: any) {
   const texto = venda.itens
     .map(
       (item: any) =>
-        `${item.codigo || item.nome}\nQtd: ${item.qtdVenda}\nR$ ${(item.preco * item.qtdVenda).toFixed(2)}`
+        `${item.nome}\nQtd: ${item.qtdVenda}\nR$ ${(item.preco * item.qtdVenda).toFixed(2)}`
     )
     .join("\n\n");
 
