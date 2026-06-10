@@ -1104,6 +1104,7 @@ function TabelaProdutos({
           <tr>
             <th className="p-3 text-left">Produto</th>
             <th className="p-3 text-left">Categoria</th>
+            <th className="p-3 text-left">Serviço</th>
             <th className="p-3 text-left">Custo</th>
             <th className="p-3 text-left">Venda</th>
             <th className="p-3 text-left">Estoque</th>
@@ -1133,6 +1134,7 @@ function TabelaProdutos({
   </div>
 </td>
               <td className="p-3">{p.categoria}</td>
+              <td className="p-3">{p.servico || "-"}</td>
               <td className="p-3">R$ {p.custo.toFixed(2)}</td>
               <td className="p-3 text-red-500 font-bold">R$ {p.preco.toFixed(2)}</td>
               <td className={`p-3 font-bold ${p.estoque <= 0 ? "text-red-500" : ""}`}>
