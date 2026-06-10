@@ -284,6 +284,7 @@ const [menuAberto, setMenuAberto] = useState(false);
     estoque: "",
     codigo: "",
     cor: "",
+    servico: "Nenhum",
     foto: "",
   });
   useEffect(() => {
@@ -731,6 +732,23 @@ async function excluirVenda(venda: any) {
   <option value="Prata">Prata</option>
   <option value="Transparente">Transparente</option>
   <option value="Colorido">Colorido</option>
+</select>
+<select
+  className="Input"
+  value={novo.servico}
+  onChange={(e) =>
+    setNovo({ ...novo, servico: e.target.value })
+  }
+>
+  <option value="Nenhum">Serviço</option>
+  <option value="Troca de Tela">Troca de Tela</option>
+  <option value="Troca de Conector">Troca de Conector</option>
+  <option value="Troca de Bateria">Troca de Bateria</option>
+  <option value="Troca de Tampa">Troca de Tampa</option>
+  <option value="Formatação">Formatação</option>
+  <option value="Desbloqueio">Desbloqueio</option>
+  <option value="Atualização">Atualização</option>
+  <option value="Limpeza">Limpeza</option>
 </select>
               <div className="col-span-full">
   <label className="block mb-2 font-semibold text-white">
