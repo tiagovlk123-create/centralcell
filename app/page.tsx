@@ -391,6 +391,7 @@ function editarProduto(produto: Produto) {
     estoque: String(produto.estoque),
     codigo: produto.codigo,
     cor: produto.cor || "",
+    servico: produto.servico || "Nenhum",
     foto: produto.foto || "",
   });
 
