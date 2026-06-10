@@ -15,6 +15,7 @@ type Produto = {
   estoque: number;
   codigo: string;
   cor?: string;
+  servico?: string
   foto?: string;
 };
 
@@ -411,6 +412,7 @@ function editarProduto(produto: Produto) {
     estoque: Number(novo.estoque),
     codigo: novo.codigo || `COD-${Date.now()}`,
     cor: novo.cor,
+    servico: novo.servico,
     foto: novo.foto,
   };
 
@@ -445,6 +447,7 @@ function editarProduto(produto: Produto) {
     estoque: "",
     codigo: "",
     cor: "",
+    servico: "Nenhum",
     foto: "",
   });
 }
