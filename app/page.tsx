@@ -26,6 +26,8 @@ const categorias = [
   "Película",
   "Capinha",
   "Carregador",
+  "Pen-drive",
+  "Cartão de memória",
   "Cabo Tipo-C",
   "Cabo Micro",
   "Cabo Tipo-C para Tipo-C",
