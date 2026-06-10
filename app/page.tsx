@@ -28,6 +28,7 @@ const categorias = [
   "Carregador",
   "Pen-drive",
   "Cartão de memória",
+  "Cabo USB para Iphone",
   "Cabo Tipo-C",
   "Cabo Micro",
   "Cabo Tipo-C para Tipo-C",
