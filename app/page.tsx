@@ -35,6 +35,7 @@ const categorias = [
   "Cabo Tipo-C para Tipo-C",
   "Cabo USB",
   "Fone de Ouvido",
+  "Fone Bluetooth",
   "Conector de Carga",
   "Formatação Simples",
   "Formatação Geral",
